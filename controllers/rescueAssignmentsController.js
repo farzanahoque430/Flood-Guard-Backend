@@ -25,27 +25,7 @@ export function getAllRescueAssignments(req, res) {
     limit = 10,
     offset = 0,
     search = "",
-    sortField = "rescuer_name",
-    sortOrder = "asc",
   } = req.query;
-
-  // Ensure only valid sort orders are used
-  const validSortOrder = ["asc", "desc"].includes(sortOrder.toLowerCase())
-    ? sortOrder
-    : "asc";
-
-  // Define valid fields that can be sorted to prevent SQL injection
-  const validSortFields = [
-    "rescuer_name",
-    "victim_name",
-    "rescue_time",
-    "status",
-  ];
-
-  // Make sure the sortField is valid to prevent SQL injection
-  const field = validSortFields.includes(sortField)
-    ? sortField
-    : "rescuer_name";
 
   const searchQuery = `%${search}%`; // Prepare the search term for filtering
 
@@ -63,7 +43,7 @@ export function getAllRescueAssignments(req, res) {
     WHERE r.name LIKE ? 
       OR v.name LIKE ? 
       OR ra.status LIKE ? 
-    ORDER BY ${field} ${validSortOrder} 
+    ORDER BY ra.assignment_id DESC
     LIMIT ? OFFSET ?
   `;
 
